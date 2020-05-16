@@ -37,13 +37,13 @@ export class CourseCardComponent implements OnInit {
     }
 
     ngOnInit() {
-        console.log(this.coursesService);
+  
     }
 
 
-    onSaveClicked(description:string) {
+    onSaveClicked(description: string) {
 
-        this.courseEmitter.emit({...this.course, description});
+        this.courseEmitter.emit({...this.course, description: description});
 
     }
 
