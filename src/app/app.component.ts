@@ -14,7 +14,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 export class AppComponent implements OnInit {
 
 
-  courses$: Observable<any>;
+  courses$: Observable<Course[]>;
 
   constructor(private http: HttpClient) {
 
@@ -25,7 +25,7 @@ export class AppComponent implements OnInit {
                     .set('page', '1')
                     .set('pageSize', '10');
 
-    this.courses$ = this.http.get('/api/courses', { params });
+    this.courses$ = this.http.get<Course[]>('/api/courses', { params });
   }
 
 }
