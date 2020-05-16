@@ -1,3 +1,4 @@
+import { CoursesService } from './../services/courses/courses.service';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -31,12 +32,12 @@ export class CourseCardComponent implements OnInit {
     courseEmitter = new EventEmitter<Course>();
 
 
-    constructor() {
+    constructor(private coursesService: CoursesService) {
 
     }
 
     ngOnInit() {
-
+        console.log(this.coursesService);
     }
 
 
