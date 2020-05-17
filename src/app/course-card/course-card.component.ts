@@ -10,10 +10,12 @@ import {
     OnInit,
     Output,
     QueryList,
-    ViewEncapsulation
+    ViewEncapsulation,
+    Inject
 } from '@angular/core';
 import {Course} from '../model/course';
 import {CourseImageComponent} from '../course-image/course-image.component';
+import { COURSES_SERVICE } from '../app.component';
 
 @Component({
     selector: 'course-card',
@@ -32,7 +34,7 @@ export class CourseCardComponent implements OnInit {
     courseEmitter = new EventEmitter<Course>();
 
 
-    constructor(private coursesService: CoursesService) {
+    constructor(@Inject(COURSES_SERVICE) private coursesService: CoursesService) {
 
     }
 
