@@ -4,10 +4,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 
 let counter = 0;
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+  useFactory: (http) => new CoursesService(http),
+  deps: [HttpClient]
+})
 export class CoursesService {
 
-  id: number; 
+  id: number;
 
   constructor(private http: HttpClient) { 
     counter++;

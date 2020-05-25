@@ -1,14 +1,44 @@
-## Understanding Hierarchical Dependency Injection
+## Understanding Angular Tree-Shakeable Providers (TSP)
+Tree Shakeable Providers are a way to define services and other things to be used by Angular’s dependency injection system in a way that can improve the performance of an Angular application.
+Tree shaking is a step in a build process that removes unused code from a code base. Removing unused code can be thought as “tree shaking,” or you can visualize the physical shaking of a tree and the remaining dead leaves falling off of the tree. By using tree shaking, we can make sure our application only includes the code that is needed for our application to run.
+The way to use TSP is through the @Injectable() decorator for our services.
+#### Ej.:
+```
+@Injectable({
+  providedIn: 'root',
+})
+```
+In this case, **providedIn: 'root'** specifies that Angular should provide the service in the root injector.
+Instead, if we want to specify that our service should be provided in an specific module, its name will substitute the *'root'* value of **providedIn**.
+```
+import { Injectable } from '@angular/core';
+import { UserModule } from './user.module';
 
-It serves to limit the provider scope. Component providers and NgModule providers are independent each other.
-* You can provide a service in the component's *providers* array when you want to eagerly load a module that needs a 
-  service all to itself. Providing a service in the component limits the service only to that component and its descendants. Other components in the same module can't access it.
-  The services provided at component level are linked to the component lifecycle. When the component is destroyed, those services instances are also removed from memory.
-  ``` 
-  @Component({
-  /* . . . */
-    providers: [UserService]
-  })
-  ```
+@Injectable({
+  providedIn: UserModule,
+})
+export class UserService {
+}
+```
+This method is preferred because it enables tree-shaking of the service if nothing inject.
 
-* The services that the whole app needs are provided in the root module
+We can use a provider function at the service level too:
+```
+@Injectable({
+  providedIn: 'root',
+  useFactory: (http) => new CoursesService(http), // or we can use 'useClass' instead, and omit 'deps' array too
+                                                  // useClass: CoursesService
+  deps: [HttpClient]
+})
+export class CoursesService {
+  ....
+}
+```
+Here, we're manually defining a provider function for our service dependencies.
+
+# Tip
+With TSP we can omit the *providers* array in our components.
+
+# Tip
+We have to use the providers array at the component level, just if the service has an state that is specific to the component, an state that we only want to have visible at the level of the component.
+Otherwise, we can use TSP (for singleton services).
