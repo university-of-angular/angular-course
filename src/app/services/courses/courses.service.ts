@@ -3,10 +3,16 @@ import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 
+let counter = 0;
 @Injectable()
 export class CoursesService {
 
-  constructor(private http: HttpClient) { }
+  id: number; 
+
+  constructor(private http: HttpClient) { 
+    counter++;
+    this.id = counter;
+  }
 
   /**
    * To fetch all the courses.
