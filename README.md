@@ -1,95 +1,74 @@
-##  Angular DI - Understanding Providers and Injection Tokens
+## Angular DI - Understanding Simplified Provider Configuration
 
-### Injection tokens
-Injection tokens are a feature of Angular that allows the injection of values that don't have a runtime representation. What we mean by this, is that you can't inject something like an interface as it only exists as a TypeScript construct, not JavaScript. Injection tokens provide a simple mechanism to link a token, to a value, and have that value injected into a component.
-
-#### Ej.:
-```
-import { InjectionToken } from '@angular/core'
-
-export const MY_TOKEN = new InjectionToken<string>('MyToken');
-```
-
-Given that token, we can define a provider:
+### Configuring Injectors
+The **NgModule** decorator has a property called **providers** which accepts a list of providers exactly the same as we would pass to the **ReflectiveInjector** via the **resolveAndCreate** function we looked at previously, like so:
 
 ```
 @NgModule({
-  providers: [
-    { provide: MY_TOKEN, useValue: 'Hello world' }
-  ]
+  providers: [EmailService, JobService]
 })
-export class AppModule { }
+class AppModule { }
 ```
 
-Which, in turn allows you to inject the value into your component:
+This creates a top-level parent injector and configures it with two class providers, **EmailService** and **JobService**.
+
+We can also configure our Components and Directives the same way using a property called **providers** on the **Component** and **Directive** decorators, like so:
 
 ```
 @Component({
-  selector: 'my-component',
-  template: '<h1>{{ value }}</h1>'
+  selector: 'my-comp',
+  template: `...`,
+  providers: [EmailService]
 })
-export class MyComponent {
-  constructor(@Inject(MY_TOKEN) public value: string) { }
-}
 ```
 
-Injection tokens become a secret to Angular extensibility. Let's look at an extended example, let's say a dynamic menu system:
-```
-export interface MenuItem {
-  label: string;
-  route: any[];
-}
-```
+This creates a child injector who’s parent injector is the injector on the parent component. If there is no parent component then the parent injector is the top-level **NgModule** injector.
 
-We could define an injection token based on our interface:
-```
-export const SETTINGS_MENU = new InjectionToken<MenuItem>('Settings');
-```
+With components we have another property called **viewProviders** which creates a special injector that resolves dependencies only for this component’s view children and doesn’t act as a parent injector for any content children, like so:
 
-Imagine if you will, in many modules, we could define menu items:
-```
-const moduleOneMenu: MenuItem = {
-  label: 'Module one',
-  route: ['/module-one']
-};
-
-@NgModule({
-  providers: [
-    { provide: SETTINGS_MENU, useValue: moduleOneMenu, multi: true }
-  ]
-})
-export class ModuleOne { }
-```
-
-And perhaps also:
-```
-const moduleTwoMenu: MenuItem = {
-  label: 'Module two',
-  route: ['/module-two']
-};
-
-@NgModule({
-  providers: [
-    { provide: SETTINGS_MENU, useValue: moduleTwoMenu, multi: true }
-  ]
-})
-export class ModuleTwo { }
-```
-
-Using the multi property, this allows us to inject many items into our component:
 ```
 @Component({
-  selector: 'my-menu',
-  template: `
-    <ul>
-      <li *ngFor="let item of items">
-        <a [routeLink]="item.route">{{ item.label }}</a>
-      </li>
-    </ul>`
+  selector: 'my-comp',
+  template: `...`,
+  viewProviders: [EmailService]
 })
-export class MenuComponent {
-  constructor(@Inject(SETTINGS_MENU) public items: MenuItem[]) { }
-}
 ```
 
-Injection tokens are a powerful feature of Angular that allows us to compose applications in variety of extensible ways.
+* We configure these injectors with providers by adding the configuration to either the **providers** property on 
+  the **NgModule**, **Component** and **Directive** decorators or to the **viewProviders** property on the **Component** decorator.
+
+* We use the **@Inject** parameter decorator to instruct Angular we want to resolve a token and inject a 
+  dependency into a constructor.
+  #### Ej.:
+  ``` 
+  import { Inject } from '@angular/core';
+  .
+  .
+  .
+  class SimpleService {
+    otherService: OtherService;
+
+    constructor(@Inject(OtherService) otherService: OtherService) {
+        this.otherService = otherService;
+    };
+  }
+  ```
+
+* We use the **@Injectable** class decorators to automatically resolve and inject all the parameters of class 
+  constructor.
+
+* We don’t need to use the **@Injectable** class decorator on classes which are already decorated with one of the 
+  other Angular decorators, such as **@Component**.
+
+# Tip
+If we want to share one instance of a service across the entirety of our application we configure it on our **NgModule**.
+
+# Tip
+If we want to have one instance of a service per component, and shared with all the component’s children, we configure it on the **providers** property on our component decorator.
+
+# Tip
+If we want to have one instance of a service per component, and shared with only the component’s view children and not the component’s content children, we configure it on the **viewProviders** property of our component decorator.
+
+# Tip
+We cannot use an interface as **InjectionToken**.
+**WE CANNOT** write our **manual provider function**. The reason? Angular uses internally the class name as the unique identifier for the **@Injectable**.
