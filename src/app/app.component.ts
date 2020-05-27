@@ -1,5 +1,5 @@
 import { CONFIG_TOKEN, APP_CONFIG, AppConfig } from './config';
-import {AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren, InjectionToken, Inject} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren, InjectionToken, Inject, Optional} from '@angular/core';
 import {COURSES} from '../db-data';
 import {Course} from './model/course';
 import {CourseCardComponent} from './course-card/course-card.component';
@@ -28,13 +28,13 @@ export class AppComponent implements OnInit {
 
   courses$: Observable<Course[]>;
 
-  constructor(private coursesService: CoursesService,
+  constructor(@Optional() private coursesService: CoursesService,
               @Inject(CONFIG_TOKEN) config: AppConfig ) {
     console.log('App config ', config);
   }
 
   ngOnInit() {
-    this.courses$ = this.coursesService.loadCourses();
+    this.courses$ = this.coursesService?.loadCourses();
   }
 
   save(course: Course) {

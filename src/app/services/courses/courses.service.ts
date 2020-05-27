@@ -4,11 +4,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 
 let counter = 0;
-@Injectable({
-  providedIn: 'root',
-  useFactory: (http) => new CoursesService(http),
-  deps: [HttpClient]
-})
+@Injectable(
+/*   {
+    providedIn: 'root'
+  } */
+)
 export class CoursesService {
 
   id: number;
