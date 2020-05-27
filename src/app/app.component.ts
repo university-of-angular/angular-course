@@ -1,3 +1,4 @@
+import { CONFIG_TOKEN, APP_CONFIG, AppConfig } from './config';
 import {AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren, InjectionToken, Inject} from '@angular/core';
 import {COURSES} from '../db-data';
 import {Course} from './model/course';
@@ -11,14 +12,25 @@ import { CoursesService } from './services/courses/courses.service';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
+/*   providers: [
+    // {
+    //  provide: CONFIG_TOKEN,
+    //  useFactory: () => APP_CONFIG
+    //} 
+    {
+      provide: CONFIG_TOKEN,
+      useValue: APP_CONFIG
+    }
+  ] */
 })
 export class AppComponent implements OnInit {
 
 
   courses$: Observable<Course[]>;
 
-  constructor(private coursesService: CoursesService) {
-    console.log('root component ', this.coursesService.id);
+  constructor(private coursesService: CoursesService,
+              @Inject(CONFIG_TOKEN) config: AppConfig ) {
+    console.log('App config ', config);
   }
 
   ngOnInit() {
