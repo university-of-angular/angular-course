@@ -12,7 +12,8 @@ import {
     QueryList,
     ViewEncapsulation,
     Inject,
-    Optional
+    Optional,
+    Self
 } from '@angular/core';
 import {Course} from '../model/course';
 import {CourseImageComponent} from '../course-image/course-image.component';
@@ -21,6 +22,9 @@ import {CourseImageComponent} from '../course-image/course-image.component';
     selector: 'course-card',
     templateUrl: './course-card.component.html',
     styleUrls: ['./course-card.component.css'],
+    providers: [
+        CoursesService
+    ]
 })
 export class CourseCardComponent implements OnInit {
 
@@ -34,7 +38,7 @@ export class CourseCardComponent implements OnInit {
     courseEmitter = new EventEmitter<Course>();
 
 
-    constructor(@Optional() private coursesService: CoursesService) {
+    constructor(@Self() private coursesService: CoursesService) {
 
     }
 

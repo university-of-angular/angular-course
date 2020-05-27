@@ -12,23 +12,16 @@ import { CoursesService } from './services/courses/courses.service';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-/*   providers: [
-    // {
-    //  provide: CONFIG_TOKEN,
-    //  useFactory: () => APP_CONFIG
-    //} 
-    {
-      provide: CONFIG_TOKEN,
-      useValue: APP_CONFIG
-    }
-  ] */
+  providers: [
+    CoursesService
+  ]
 })
 export class AppComponent implements OnInit {
 
 
   courses$: Observable<Course[]>;
 
-  constructor(@Optional() private coursesService: CoursesService,
+  constructor(private coursesService: CoursesService,
               @Inject(CONFIG_TOKEN) config: AppConfig ) {
     console.log('App config ', config);
   }
