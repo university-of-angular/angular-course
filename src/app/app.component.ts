@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { COURSES } from './../db-data';
+import { Observable } from 'rxjs';
 import { AppConfig, CONFIG_TOKEN } from './config';
 import { Course } from './model/course';
 import { CoursesService } from './services/courses/courses.service';
@@ -11,7 +11,7 @@ import { CoursesService } from './services/courses/courses.service';
 })
 export class AppComponent implements OnInit {
 
-  courses = COURSES;
+  courses$: Observable<Course[]>;
 
   constructor(private coursesService: CoursesService,
               @Inject(CONFIG_TOKEN) config: AppConfig ) {
@@ -19,7 +19,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    this.courses$ = this.coursesService.loadCourses();
   }
 
   save(course: Course) {
@@ -29,10 +29,7 @@ export class AppComponent implements OnInit {
   }
 
   onEditCourse() {
-    const course = this.courses[0];
-    const newCourse: any = {...course};
-    newCourse.description = 'New Value';
-    this.courses[0] = newCourse;
+
   }
 
 }
