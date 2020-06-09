@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, SkipSelf } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, SkipSelf, Attribute } from '@angular/core';
 import { Course } from '../model/course';
 import { CoursesService } from './../services/courses/courses.service';
 
@@ -20,7 +20,10 @@ export class CourseCardComponent implements OnInit {
     courseEmitter = new EventEmitter<Course>();
 
 
-    constructor(@SkipSelf() private coursesService: CoursesService) {
+    constructor(private coursesService: CoursesService,
+                @Attribute('type') private type: string) {
+        
+        console.log(type);
 
     }
 
