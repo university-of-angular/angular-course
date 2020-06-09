@@ -1,11 +1,20 @@
-# Angular Attribute Decorator
-The **@Attribute** decorator is one of the least known and least used, but in some cases, it can bring a performance boost to the application.
-The **@Attribute** decorator returns the value of the specified attribute from the host. It's useful, for example, when you don't need to use *Inputs()* and you don't want Angular to recheck the value in each change detection cycle. With **@Attribute** you are getting the value once and you are done.
+# Angular Custom Change Detection with ChangeDetectorRef
+It serves to inform Angular manually for the change detection whenever arrives some data, without using Observables and the async pipe, or without using @Input().
+Every component has its own **ChangeDetectorRef**.
+Using the **markForCheck()** method from **ChangeDetectorRef**, we inform Angular that the component should be check for changing.
 #### Ej.:
 ```
 ...
 constructor(private coursesService: CoursesService,
-            @Attribute('type') private type: string) {
-    ....            
+            private cd: ChangeDetectorRef) {
+
+}
+...
+
+ngOnInit() {
+    this.coursesService.loadCourses().subscribe(courses =>{
+        this.courses = courses;
+        this.cd.markForCheck();
+    });
 }
 ```
