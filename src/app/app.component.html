@@ -11,8 +11,8 @@
 
 <div>
 
-  <div class="courses">
-    <course-card *ngFor="let course of courses"
+  <div class="courses" *ngIf="courses[0] as course">
+    <course-card 
                 [course]="course"
                 type="beginner"
                 (courseChanged)="save($event)">

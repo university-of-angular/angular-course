@@ -1,3 +1,4 @@
+import { COURSES } from './../db-data';
 import { Component, Inject, OnInit, ChangeDetectorRef, DoCheck } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AppConfig, CONFIG_TOKEN } from './config';
@@ -11,7 +12,7 @@ import { CoursesService } from './services/courses/courses.service';
 })
 export class AppComponent implements OnInit, DoCheck {
 
-  courses: Course[];
+  courses: Course[] = COURSES;
 
   loaded = false;
 
@@ -22,20 +23,13 @@ export class AppComponent implements OnInit, DoCheck {
   }
 
   ngOnInit() {
-    this.coursesService.loadCourses().subscribe(courses =>{
-      this.courses = courses;
-      // this.cd.markForCheck();
-      this.loaded = true;
-    });
+
   }
 
   // This is the best method to implement some custom change detection logic
   ngDoCheck() {
-    console.log('ngDoCheck');
-
     if (this.loaded) {
       this.cd.markForCheck();
-      console.log('Called cd.markForCheck.');
       this.loaded = undefined;
     }
   }
@@ -47,7 +41,7 @@ export class AppComponent implements OnInit, DoCheck {
   }
 
   onEditCourse() {
-
+    this.courses = [undefined];
   }
 
 }
